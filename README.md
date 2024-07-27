@@ -1,2 +1,401 @@
-# SQL-Analyze-India-Debt-Statistics-
-Conducted an in-depth analysis of India's debt statistics using SQL. Extracted, transformed, and loaded (ETL) data from multiple sources to create comprehensive reports. Implemented complex queries to identify trends and insights, and created interactive dashboards in Power BI to facilitate data-driven decision-making.
+
+SQL-Analyze-India-Debt-Statistics 
+
+1. Calculate the total debt for each year for the 'Public sector'.
+
+ SELECT 
+    SUM(CAST(y_2012 AS DECIMAL(15, 2))) AS total_2012,
+    SUM(CAST(y_2013 AS DECIMAL(15, 2))) AS total_2013,
+    SUM(CAST(y_2014 AS DECIMAL(15, 2))) AS total_2014,
+    SUM(CAST(y_2015 AS DECIMAL(15, 2))) AS total_2015,
+    SUM(CAST(y_2016 AS DECIMAL(15, 2))) AS total_2016,
+    SUM(CAST(y_2017 AS DECIMAL(15, 2))) AS total_2017,
+    SUM(CAST(y_2018 AS DECIMAL(15, 2))) AS total_2018,
+    SUM(CAST(y_2019 AS DECIMAL(15, 2))) AS total_2019,
+    SUM(CAST(y_2020 AS DECIMAL(15, 2))) AS total_2020,
+    SUM(CAST(y_2021 AS DECIMAL(15, 2))) AS total_2021,
+    SUM(CAST(y_2022 AS DECIMAL(15, 2))) AS total_2022
+FROM debt
+WHERE debt_category IN ('Public sector', 'Public and publicly guaranteed', 'Other public sector');
+
+2. IN WHICH YEAR THE INDIA TAKE BIGGEST LOAN  FROM PUBLIC SECTOR
+
+SELECT 
+    year, 
+    max_debt
+FROM (
+    SELECT 
+        '2012' AS year, MAX(CAST(y_2012 AS DECIMAL(15, 2))) AS max_debt
+    FROM debt
+    UNION
+    SELECT 
+        '2013' AS year, MAX(CAST(y_2013 AS DECIMAL(15, 2))) AS max_debt
+    FROM debt
+    UNION
+    SELECT 
+        '2014' AS year, MAX(CAST(y_2014 AS DECIMAL(15, 2))) AS max_debt
+    FROM debt
+    UNION
+    SELECT 
+        '2015' AS year, MAX(CAST(y_2015 AS DECIMAL(15, 2))) AS max_debt
+    FROM debt
+    UNION
+    SELECT 
+        '2016' AS year, MAX(CAST(y_2016 AS DECIMAL(15, 2))) AS max_debt
+    FROM debt
+    UNION
+    SELECT 
+        '2017' AS year, MAX(CAST(y_2017 AS DECIMAL(15, 2))) AS max_debt
+    FROM debt
+    UNION
+    SELECT 
+        '2018' AS year, MAX(CAST(y_2018 AS DECIMAL(15, 2))) AS max_debt
+    FROM debt
+    UNION
+    SELECT 
+        '2019' AS year, MAX(CAST(y_2019 AS DECIMAL(15, 2))) AS max_debt
+    FROM debt
+    UNION
+    SELECT 
+        '2020' AS year, MAX(CAST(y_2020 AS DECIMAL(15, 2))) AS max_debt
+    FROM debt
+    UNION
+    SELECT 
+        '2021' AS year, MAX(CAST(y_2021 AS DECIMAL(15, 2))) AS max_debt
+    FROM debt
+    UNION
+    SELECT 
+        '2022' AS year, MAX(CAST(y_2022 AS DECIMAL(15, 2))) AS max_debt
+    FROM debt
+) AS yearly_max_debts
+ORDER BY max_debt DESC
+LIMIT 1;
+
+ 3.HIGHEST TOTAL DEBT FROM PUBLIC SECTOR FROM 2012 TO 2022
+  
+SELECT 
+    year, 
+    total_debt
+FROM (
+    SELECT 
+        '2012' AS year, SUM(CAST(y_2012 AS DECIMAL(15, 2))) AS total_debt
+    FROM debt
+     WHERE debt_category IN ('Public sector', 'Public and publicly guaranteed', 'Other public sector')
+    UNION
+    SELECT 
+        '2013' AS year, SUM(CAST(y_2013 AS DECIMAL(15, 2))) AS total_debt
+    FROM debt
+     WHERE debt_category IN ('Public sector', 'Public and publicly guaranteed', 'Other public sector')
+    UNION
+    SELECT 
+        '2014' AS year, SUM(CAST(y_2014 AS DECIMAL(15, 2))) AS total_debt
+    FROM debt
+     WHERE debt_category IN ('Public sector', 'Public and publicly guaranteed', 'Other public sector')
+    UNION
+    SELECT 
+        '2015' AS year, SUM(CAST(y_2015 AS DECIMAL(15, 2))) AS total_debt
+    FROM debt
+     WHERE debt_category IN ('Public sector', 'Public and publicly guaranteed', 'Other public sector')
+    UNION
+    SELECT 
+        '2016' AS year, SUM(CAST(y_2016 AS DECIMAL(15, 2))) AS total_debt
+    FROM debt
+     WHERE debt_category IN ('Public sector', 'Public and publicly guaranteed', 'Other public sector')
+    UNION
+    SELECT 
+        '2017' AS year, SUM(CAST(y_2017 AS DECIMAL(15, 2))) AS total_debt
+    FROM debt
+     WHERE debt_category IN ('Public sector', 'Public and publicly guaranteed', 'Other public sector')
+    UNION
+    SELECT 
+        '2018' AS year, SUM(CAST(y_2018 AS DECIMAL(15, 2))) AS total_debt
+    FROM debt
+   WHERE debt_category IN ('Public sector', 'Public and publicly guaranteed', 'Other public sector')
+    UNION
+    SELECT 
+        '2019' AS year, SUM(CAST(y_2019 AS DECIMAL(15, 2))) AS total_debt
+    FROM debt
+    WHERE debt_category IN ('Public sector', 'Public and publicly guaranteed', 'Other public sector')
+    UNION
+    SELECT 
+        '2020' AS year, SUM(CAST(y_2020 AS DECIMAL(15, 2))) AS total_debt
+    FROM debt
+     WHERE debt_category IN ('Public sector', 'Public and publicly guaranteed', 'Other public sector')
+    UNION
+    SELECT 
+        '2021' AS year, SUM(CAST(y_2021 AS DECIMAL(15, 2))) AS total_debt
+    FROM debt
+    WHERE debt_category IN ('Public sector', 'Public and publicly guaranteed', 'Other public sector')
+    UNION
+    SELECT 
+        '2022' AS year, SUM(CAST(y_2022 AS DECIMAL(15, 2))) AS total_debt
+    FROM debt
+   WHERE debt_category IN ('Public sector', 'Public and publicly guaranteed', 'Other public sector')
+) AS yearly_totals
+ORDER BY total_debt DESC
+ LIMIT 1;
+ 
+ 4.PUBLIC SECTOR VS PRIVATE SECTOR
+
+WITH public_debt AS (
+    SELECT 
+        SUM(CAST(y_2012 AS DECIMAL(15, 2))) AS total_2012,
+        SUM(CAST(y_2013 AS DECIMAL(15, 2))) AS total_2013,
+        SUM(CAST(y_2014 AS DECIMAL(15, 2))) AS total_2014,
+        SUM(CAST(y_2015 AS DECIMAL(15, 2))) AS total_2015,
+        SUM(CAST(y_2016 AS DECIMAL(15, 2))) AS total_2016,
+        SUM(CAST(y_2017 AS DECIMAL(15, 2))) AS total_2017,
+        SUM(CAST(y_2018 AS DECIMAL(15, 2))) AS total_2018,
+        SUM(CAST(y_2019 AS DECIMAL(15, 2))) AS total_2019,
+        SUM(CAST(y_2020 AS DECIMAL(15, 2))) AS total_2020,
+        SUM(CAST(y_2021 AS DECIMAL(15, 2))) AS total_2021,
+        SUM(CAST(y_2022 AS DECIMAL(15, 2))) AS total_2022
+    FROM debt
+    WHERE debt_category IN ('Public sector', 'Public and publicly guaranteed', 'Other public sector')
+),
+private_debt AS (
+    SELECT 
+        SUM(CAST(y_2012 AS DECIMAL(15, 2))) AS total_2012,
+        SUM(CAST(y_2013 AS DECIMAL(15, 2))) AS total_2013,
+        SUM(CAST(y_2014 AS DECIMAL(15, 2))) AS total_2014,
+        SUM(CAST(y_2015 AS DECIMAL(15, 2))) AS total_2015,
+        SUM(CAST(y_2016 AS DECIMAL(15, 2))) AS total_2016,
+        SUM(CAST(y_2017 AS DECIMAL(15, 2))) AS total_2017,
+        SUM(CAST(y_2018 AS DECIMAL(15, 2))) AS total_2018,
+        SUM(CAST(y_2019 AS DECIMAL(15, 2))) AS total_2019,
+        SUM(CAST(y_2020 AS DECIMAL(15, 2))) AS total_2020,
+        SUM(CAST(y_2021 AS DECIMAL(15, 2))) AS total_2021,
+        SUM(CAST(y_2022 AS DECIMAL(15, 2))) AS total_2022
+    FROM debt
+    WHERE debt_category IN ('Private nonguaranteed', 'Private creditors, Other private', 'Private sector guaranteed by public sector')
+)
+SELECT
+    year,
+    public_debt,
+    private_debt,
+    ROUND((public_debt / (public_debt + private_debt)) * 100, 2) AS public_debt_percentage,
+    ROUND((private_debt / (public_debt + private_debt)) * 100, 2) AS private_debt_percentage
+FROM (
+    SELECT 
+        '2012' AS year, 
+        public_debt.total_2012 AS public_debt, 
+        private_debt.total_2012 AS private_debt
+    FROM public_debt, private_debt
+    UNION
+    SELECT 
+        '2013' AS year, 
+        public_debt.total_2013 AS public_debt, 
+        private_debt.total_2013 AS private_debt
+    FROM public_debt, private_debt
+    UNION
+    SELECT 
+        '2014' AS year, 
+        public_debt.total_2014 AS public_debt, 
+        private_debt.total_2014 AS private_debt
+    FROM public_debt, private_debt
+    UNION
+    SELECT 
+        '2015' AS year, 
+        public_debt.total_2015 AS public_debt, 
+        private_debt.total_2015 AS private_debt
+    FROM public_debt, private_debt
+    UNION
+    SELECT 
+        '2016' AS year, 
+        public_debt.total_2016 AS public_debt, 
+        private_debt.total_2016 AS private_debt
+    FROM public_debt, private_debt
+    UNION
+    SELECT 
+        '2017' AS year, 
+        public_debt.total_2017 AS public_debt, 
+        private_debt.total_2017 AS private_debt
+    FROM public_debt, private_debt
+    UNION
+    SELECT 
+        '2018' AS year, 
+        public_debt.total_2018 AS public_debt, 
+        private_debt.total_2018 AS private_debt
+    FROM public_debt, private_debt
+    UNION
+    SELECT 
+        '2019' AS year, 
+        public_debt.total_2019 AS public_debt, 
+        private_debt.total_2019 AS private_debt
+    FROM public_debt, private_debt
+    UNION
+    SELECT 
+        '2020' AS year, 
+        public_debt.total_2020 AS public_debt, 
+        private_debt.total_2020 AS private_debt
+    FROM public_debt, private_debt
+    UNION
+    SELECT 
+        '2021' AS year, 
+        public_debt.total_2021 AS public_debt, 
+        private_debt.total_2021 AS private_debt
+    FROM public_debt, private_debt
+    UNION
+    SELECT 
+        '2022' AS year, 
+        public_debt.total_2022 AS public_debt, 
+        private_debt.total_2022 AS private_debt
+    FROM public_debt, private_debt
+) AS debt_totals;
+
+5. FROM WHICH SECTOR INDIA HAS THE HIGHEST DEBT FROM 2012 TO 2022
+
+WITH TotalDebt AS (
+    SELECT debt_category,
+           SUM(CAST(y_2012 AS DECIMAL(15,2)) +
+               CAST(y_2013 AS DECIMAL(15,2)) +
+               CAST(y_2014 AS DECIMAL(15,2)) +
+               CAST(y_2015 AS DECIMAL(15,2)) +
+               CAST(y_2016 AS DECIMAL(15,2)) +
+               CAST(y_2017 AS DECIMAL(15,2)) +
+               CAST(y_2018 AS DECIMAL(15,2)) +
+               CAST(y_2019 AS DECIMAL(15,2)) +
+               CAST(y_2020 AS DECIMAL(15,2)) +
+               CAST(y_2022 AS DECIMAL(15,2))) AS highest_debt
+    FROM debt
+    GROUP BY debt_category
+)
+SELECT debt_category, highest_debt
+FROM TotalDebt
+ORDER BY highest_debt DESC
+LIMIT 1;
+
+-- 6.HIGHEST LOAN TAKEN FROM FROM THE COMMERCIAL BANK over the year
+ SELECT debt_category,
+    SUM(CAST(y_2012 AS DECIMAL(15, 2))) AS total_2012,
+    SUM(CAST(y_2013 AS DECIMAL(15, 2))) AS total_2013,
+    SUM(CAST(y_2014 AS DECIMAL(15, 2))) AS total_2014,
+    SUM(CAST(y_2015 AS DECIMAL(15, 2))) AS total_2015,
+    SUM(CAST(y_2016 AS DECIMAL(15, 2))) AS total_2016,
+    SUM(CAST(y_2017 AS DECIMAL(15, 2))) AS total_2017,
+    SUM(CAST(y_2018 AS DECIMAL(15, 2))) AS total_2018,
+    SUM(CAST(y_2019 AS DECIMAL(15, 2))) AS total_2019,
+    SUM(CAST(y_2020 AS DECIMAL(15, 2))) AS total_2020,
+    SUM(CAST(y_2021 AS DECIMAL(15, 2))) AS total_2021,
+    SUM(CAST(y_2022 AS DECIMAL(15, 2))) AS total_2022
+FROM debt
+WHERE debt_category =  'Commercial banks'
+group by debt_category ;
+
+7. TOTAL LOAN TAKEN FROM COMMERCIAL BANK FROM 2012 TO 2024
+
+SELECT debt_category,
+       SUM(CAST(y_2012 AS DECIMAL(15,2)) +
+           CAST(y_2013 AS DECIMAL(15,2)) +
+           CAST(y_2014 AS DECIMAL(15,2)) +
+           CAST(y_2015 AS DECIMAL(15,2)) +
+           CAST(y_2016 AS DECIMAL(15,2)) +
+           CAST(y_2017 AS DECIMAL(15,2)) +
+           CAST(y_2018 AS DECIMAL(15,2)) +
+           CAST(y_2019 AS DECIMAL(15,2)) +
+           CAST(y_2020 AS DECIMAL(15,2)) +
+           CAST(y_2022 AS DECIMAL(15,2))) AS highest_debt
+FROM debt
+WHERE debt_category = 'Commercial banks';
+
+8. HOW MUCH INTREST paid OVER THE YEAR AND TOTAL TILL 2022
+
+WITH TotalInterest AS (
+    SELECT debt_category,
+           SUM(CAST(y_2012 AS DECIMAL(15,2)) +
+               CAST(y_2013 AS DECIMAL(15,2)) +
+               CAST(y_2014 AS DECIMAL(15,2)) +
+               CAST(y_2015 AS DECIMAL(15,2)) +
+               CAST(y_2016 AS DECIMAL(15,2)) +
+               CAST(y_2017 AS DECIMAL(15,2)) +
+               CAST(y_2018 AS DECIMAL(15,2)) +
+               CAST(y_2019 AS DECIMAL(15,2)) +
+               CAST(y_2020 AS DECIMAL(15,2)) +
+               CAST(y_2022 AS DECIMAL(15,2))) AS highest_debt
+   FROM debt
+   where debt_category = 'Interest payments'
+)
+SELECT debt_category, highest_debt
+FROM TotalInterest
+ORDER BY highest_debt DESC
+LIMIT 1;
+
+9.RATIO OF DEBT BETWEEN THE YEAR 2012 TO 2024
+
+WITH yearly_debt AS (
+    SELECT 
+        '2012' AS year, SUM(CAST(y_2012 AS DECIMAL(15, 2))) AS total_debt
+    FROM 
+        debt
+    UNION ALL
+    SELECT 
+        '2013' AS year, SUM(CAST(y_2013 AS DECIMAL(15, 2))) AS total_debt
+    FROM 
+        debt
+    UNION ALL
+    SELECT 
+        '2014' AS year, SUM(CAST(y_2014 AS DECIMAL(15, 2))) AS total_debt
+    FROM 
+        debt
+    UNION ALL
+    SELECT 
+        '2015' AS year, SUM(CAST(y_2015 AS DECIMAL(15, 2))) AS total_debt
+    FROM 
+        debt
+    UNION ALL
+    SELECT 
+        '2016' AS year, SUM(CAST(y_2016 AS DECIMAL(15, 2))) AS total_debt
+    FROM 
+        debt
+    UNION ALL
+    SELECT 
+        '2017' AS year, SUM(CAST(y_2017 AS DECIMAL(15, 2))) AS total_debt
+    FROM 
+        debt
+    UNION ALL
+    SELECT 
+        '2018' AS year, SUM(CAST(y_2018 AS DECIMAL(15, 2))) AS total_debt
+    FROM 
+        debt
+    UNION ALL
+    SELECT 
+        '2019' AS year, SUM(CAST(y_2019 AS DECIMAL(15, 2))) AS total_debt
+    FROM 
+        debt
+    UNION ALL
+    SELECT 
+        '2020' AS year, SUM(CAST(y_2020 AS DECIMAL(15, 2))) AS total_debt
+    FROM 
+        debt
+    UNION ALL
+    SELECT 
+        '2021' AS year, SUM(CAST(y_2021 AS DECIMAL(15, 2))) AS total_debt
+    FROM 
+        debt
+    UNION ALL
+    SELECT 
+        '2022' AS year, SUM(CAST(y_2022 AS DECIMAL(15, 2))) AS total_debt
+    FROM 
+        debt
+)
+SELECT 
+    year,
+    total_debt,
+    LAG(total_debt) OVER (ORDER BY year) AS previous_year_debt,
+    CASE 
+        WHEN LAG(total_debt) OVER (ORDER BY year) IS NULL THEN NULL
+        ELSE total_debt / LAG(total_debt) OVER (ORDER BY year)
+    END AS debt_ratio
+FROM 
+    yearly_debt
+ORDER BY 
+    year;
+
+   
+
+
+
+
+
+
+
