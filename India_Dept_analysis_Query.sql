@@ -1,8 +1,5 @@
 1️.Trend of External Debt Over Time (2013–2024)
 🔹Question: What is the trend of total external debt from 2013 to 2024?
-
-🔸 SQL:
-
 SELECT year, SUM(value) AS total_external_debt
  FROM External_Debt_Overview edo
  JOIN Indicator_Dimension i ON edo.indicator_id = i.id 
@@ -11,8 +8,6 @@ SELECT year, SUM(value) AS total_external_debt
 
 2️.Top 5 Contributors to External Debt by Sector (Most Recent Year)
 🔹Question: Which sectors had the highest external debt in the latest year?
-
-🔸 SQL:
 
 WITH latest_year AS(
 SELECT 
@@ -36,9 +31,6 @@ LIMIT 5;
 
 3️.Debt Service vs Net Transfers (Yearly Comparison)
 🔹Question:How do debt service payments compare to net transfers annually?
-
-🔸 SQL:
-
 SELECT ct.year,
    SUM(CASE WHEN i.indicator_name ILIKE '%total debt service paid%' THEN ct.value ELSE 0 END) AS total_service,
    SUM(CASE WHEN i.indicator_name ILIKE '%net transfers on external debt%' THEN ct.value ELSE 0 END) AS net_transfers
@@ -49,8 +41,6 @@ SELECT ct.year,
 4️.Debt to GNI Ratio Trend
 🔹Question: How has the external debt to GNI ratio evolved overtime?
 
-🔸 SQL:
-
 SELECT r.year, r.value AS debt_gni_ratio
  FROM Ratios_and_Percentages r
  JOIN Indicator_Dimension i ON r.indicator_id = i.id
@@ -58,8 +48,6 @@ SELECT r.year, r.value AS debt_gni_ratio
 
 5️.Interest vs Maturity: Loan Condition Trends
 🔹Question: What are the trends in interest rates and maturity of new loan commitments?
-
-🔸 SQL:
 
 SELECT l.year,
    MAX(CASE WHEN i.indicator_name ILIKE '%interest (%)%' THEN l.value ELSE NULL END) AS interest_rate,
@@ -71,8 +59,6 @@ SELECT l.year,
 
 6️.Debt Sustainability Metrics (Recent Year)
 🔹Question: What are the key ratios for assessing debt sustainability?
-
-🔸 SQL:
 
 WITH latest_year AS (
     SELECT MAX(year) AS max_year FROM Ratios_and_Percentages
@@ -102,8 +88,6 @@ WHERE
 
 7: Public Debt Analysis
 🔹Question:What is the percentage share of public debt vs total external debt for each year?
-
-🔸 SQL:
 
 SELECT 
     s.year,
@@ -147,12 +131,9 @@ ORDER BY s.year;
 
 
 
-
-
 8.Which public sector had the highest public debt in the most recent year?
 🔹Question: Which public sector category contributed the most to debt in the latest year in India?
-
-
+	
 WITH latest_year AS (
     SELECT MAX(year) AS max_year FROM Sector_Wise_Debt
 )
@@ -200,24 +181,6 @@ ORDER BY
     total_value DESC;
 
 
-
-select * from public.creditors_and_transactions;
-select * from public.economic_indicators;
-select * from public.external_debt_overview;
-select * from public.indicator_dimension;
-select * from public.loan_terms_and_commitments;
-select * from public.ratios_and_percentages;
-select * from public.sector_wise_debt;
-
-select
-	i.indicator_name,
-	ltc.value
-from
-	indicator_dimension i
-join
-	loan_terms_and_commitments ltc on i.id = ltc.id
-where i.indicator_name like '%public%'
-order by ltc.value desc
 
 
 
